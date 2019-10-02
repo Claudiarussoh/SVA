@@ -1,0 +1,23 @@
+import turtle 
+
+ninja = turtle.Turtle()
+
+ninja.speed(40)
+
+for i in range(180):
+    ninja.forward(75)
+    ninja.left(130)
+    ninja.forward(22)
+    ninja.right(90)
+    ninja.forward(15)
+    ninja.right(46)
+    ninja.forward(95)
+    ninja.right(10)
+
+    ninja.penup()
+    ninja.setposition(0, 0)
+    ninja.pendown()
+    
+    ninja.right(42)
+    
+turtle.done()
