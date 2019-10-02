@@ -1,0 +1,9 @@
+//Object//
+
+myDict =
+{
+"color": "gray", 
+"personality": "friendly", 
+"speed": "fast",
+"mammal": "true"
+}
