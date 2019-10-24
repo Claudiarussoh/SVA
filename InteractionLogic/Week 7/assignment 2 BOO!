@@ -65,6 +65,10 @@ function draw() {
         ellipse(positions[32][0], positions[32][1], 30, 30);
         ellipse(positions[24][0], positions[24][1], 30, 30);
       
+        fill(0, 255, 255);
+        ellipse(positions[32][0], positions[32][1], 10, 10);
+        ellipse(positions[24][0], positions[24][1], 10, 10);
+      
        
         /*noStroke();
         fill(0, 255, 255);
