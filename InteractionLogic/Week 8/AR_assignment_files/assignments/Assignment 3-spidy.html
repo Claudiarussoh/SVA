@@ -3,7 +3,6 @@
 
 <head>
   <title>
-    simple ar - display text and images
   </title>
   <meta name="description" content="simple_ar">
   <script src="https://aframe.io/releases/0.7.0/aframe.min.js"></script>
@@ -12,21 +11,30 @@
 
 <body>
   <a-scene embedded arjs>
-    <a-marker preset="hiro">
-
-            <!-- some text -->
-            <a-text position='0 0.5 0'  value="I don't bite..."></a-text>
-
-            <a-assets>
-      <a-asset-item id="Duck" src="assets/gltf/spider/spidy.gltf"></a-asset-item>
+    
+    <!-- define your gltf asset -->
+    <a-assets>
+      <a-asset-item id="Duck" src="assets/gltf/spider/model.gltf"></a-asset-item>
     </a-assets>
 
+    <!--
+    <a-marker preset="hiro">
+    -->
+
+    <a-marker preset="hiro">
+      <a-text position='0 0.5 0'  value="I don't bite..."></a-text>
+           <a-animation position="10 0.5 2" attribute="rotation" to="40 360 0" dur="10000" repeat="indefinite" easing="linear"></a-animation>
+            <!-- display your gltf asset -->
+            <a-entity gltf-model="#Duck">
+            </a-entity>
+
+
     </a-marker>
+
     <a-entity camera>
     </a-entity>
 
   </a-scene>
-  
 </body>
 
 </html>
