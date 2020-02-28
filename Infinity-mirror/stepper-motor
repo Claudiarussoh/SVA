@@ -1,0 +1,59 @@
+#include
+
+// number of steps per revolution
+const int stepsPerRevolution = 200;
+
+// initialize the stepper library on pins 8 through 11:
+Stepper myStepper(stepsPerRevolution, 8, 9, 10, 11);
+
+// initialize the stepper library on pins 2 through 5:
+Stepper myStepper2(stepsPerRevolution, 2, 3, 4, 5);
+
+int stepCount = 0; // number of steps the motor has taken
+
+void setup() {
+// nothing to do inside the setup
+}
+
+void loop() {
+// read the sensor value:
+int sensorReading = analogRead(A0);
+// map it to a range from 0 to 15:
+if (analogRead(A0) > 511) {
+int motorSpeed = map(sensorReading, 512, 1023, 0, 15);
+// set the motor speed:
+if (motorSpeed > 0) {
+myStepper.setSpeed(motorSpeed);
+// step 1/100 of a revolution:
+myStepper.step(stepsPerRevolution / 100);
+}
+}
+else {
+int motorSpeed = map(sensorReading, 511, 0, 0, 15);
+// set the motor speed:
+if (motorSpeed > 0) {
+myStepper.setSpeed(motorSpeed);
+// step 1/100 of a revolution:
+myStepper.step(-stepsPerRevolution / 100);
+}
+}
+if (analogRead(A0) > 511) {
+int motorSpeed = map(sensorReading, 512, 1023, 0, 15);
+// set the motor speed:
+if (motorSpeed > 0) {
+myStepper2.setSpeed(motorSpeed);
+// step 1/100 of a revolution:
+myStepper2.step(-stepsPerRevolution / 100);
+}
+}
+else {
+int motorSpeed = map(sensorReading, 511, 0, 0, 15);
+// set the motor speed:
+if (motorSpeed > 0) {
+myStepper2.setSpeed(motorSpeed);
+// step 1/100 of a revolution:
+myStepper2.step(+stepsPerRevolution / 100);
+}
+}
+
+}
