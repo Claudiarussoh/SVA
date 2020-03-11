@@ -1,0 +1,102 @@
+#include Servo.h
+#include Wire.h
+#include Adafruit_TCS34725.h
+Servo colorSorter;
+Servo gate;
+
+//NOT A COLOR = 0
+//ORANGE = 1
+//YELLOW = 2
+//CYAN = 3
+
+uint16_t r, g, b, c;
+int lastColor = 0;
+int color = “not an object”;
+int gateOpen = 90;
+int gateClose = 27;
+int orange = 113; //colorSorter angle
+int yellow = 28; //colorSorter angle
+int cyan = 83; //colorSorter angle
+
+Adafruit_TCS34725 tcs = Adafruit_TCS34725(TCS34725_INTEGRATIONTIME_700MS, TCS34725_GAIN_1X);
+
+void setup() {
+
+//iniciate serial communication and define servo motor and their initial angles.
+Serial.begin(9600);
+colorSorter.attach(9);
+gate.attach(10);
+colorSorter.write(28);
+gate.write(gateClose);
+
+//check if sensor is conected.
+if (tcs.begin()) {
+Serial.println(“Found sensor”);
+}
+else {
+Serial.println(“No TCS34725 found … check your connections”);
+while (1);
+}
+}
+
+void loop() {
+
+tcs.getRawData(&r, &g, &b, &c);
+
+//detect cyan.
+if(r >= 2000 && r <= 13000 && g >= 8000 && g <= 30000 && b >= 9000 && b <= 30000) { color = 3; } //detect yellow. else if(r >= 20000 && r <= 50000 && g >= 17000 && g <= 50000 && b >= 6000 && b <= 25000) { color = 2; } //detect orange. else if(r >= 20000 && r <= 60000 && g >= 3000 && g <= 14000 && b >= 3000 && b <= 20000) {
+color = 1;
+}
+
+//not an specified color.
+else {
+color = 0;
+}
+
+//if color is cyan, send “1” “to processing”, put colorSorter in cyan position and open and close the gate
+if (color == 3 && color != lastColor){
+Serial.println(“3”);
+colorSorter.write(cyan);
+delay(300);
+gate.write(gateOpen);
+delay(300);
+gate.write(gateClose);
+}
+
+//if color is yellow, send “2” “to processing”, put colorSorter in cyan position and open and close the gate.
+else if (color == 2 && color != lastColor){
+Serial.println(“2”);
+colorSorter.write(yellow);
+delay(300);
+gate.write(gateOpen);
+delay(300);
+gate.write(gateClose);
+}
+
+//if color is orange, send “3” “to processing”, put colorSorter in cyan position and open and close the gate.
+else if (color == 1 && color != lastColor){
+Serial.println(“1”);
+colorSorter.write(orange);
+delay(300);
+gate.write(gateOpen);
+delay(300);
+gate.write(gateClose);
+}
+
+//if is not cyan, yellow or orange, do nothing and send “0” “to processing”.
+else if (color == 0 && color != lastColor){
+Serial.println(“0”);
+}
+
+//CALIBRATION
+
+Serial.print(“R: “); Serial.print(r, DEC); Serial.print(” “);
+Serial.print(“G: “); Serial.print(g, DEC); Serial.print(” “);
+Serial.print(“B: “); Serial.print(b, DEC); Serial.print(” “);
+Serial.println(” “);
+
+//after reading the actual color, save it as lastColor to compare with the next reading.
+lastColor = color;
+
+delay(50);
+}
