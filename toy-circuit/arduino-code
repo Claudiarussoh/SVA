@@ -1,0 +1,63 @@
+#include
+Servo myservo;
+int photoresistor = 0; //this variable will hold a value based on the brightness of the ambient light
+int threshhold = 50;
+const int IRsensor = A1; // infrared dsistance sensor
+const int eye1 = 5; //pin to control the red LED inside the RGB LED
+const int eye2 = 6; //pin to control the green LED inside the RGB LED
+const int buzzerPin = 10; //pin that will drive the buzzer
+int distance = 0;
+void setup() {
+
+// put your setup code here, to run once:
+
+Serial.begin (9600); //set up a serial connection with the computer
+myservo.attach(9);
+myservo.write(90); //OPEN MOUTH
+//set the RGB LED pins to output
+pinMode(eye1, OUTPUT);
+pinMode(eye2, OUTPUT);
+}
+void loop() {
+
+// put your main code here, to run repeatedly:
+
+distance = analogRead(IRsensor); // pin A1
+
+photoresistor = analogRead(A0);
+Serial.print(distance); //print the distance that was measured
+Serial.println(" dist");
+
+Serial.println(photoresistor);
+if (distance > 250) { //if the object is close
+
+//blink LED
+digitalWrite(eye1, HIGH);
+digitalWrite(eye2, HIGH);
+tone(buzzerPin, 272);
+delay(100); //wait 100 milliseconds
+digitalWrite(eye1, LOW);
+digitalWrite(eye2, LOW);
+noTone(buzzerPin); //turn the buzzer off
+delay(100); //wait 100 milliseconds
+} else if (distance > 200 && distance <= 250) { //if the object is a medium distance
+//blink LED slower
+digitalWrite(eye1, HIGH);
+digitalWrite(eye2, HIGH);
+delay(300);
+digitalWrite(eye1, LOW);
+digitalWrite(eye2, LOW);
+delay(300);
+} else { //if the object is far away
+//dont blink LED
+digitalWrite(eye1, LOW);
+digitalWrite(eye2, LOW);
+}
+if (photoresistor < threshhold) {
+myservo.write(45); //CLOSE MOUTH
+delay (200);
+myservo.write(90); //OPEN MOUTH
+delay (200);
+}
+delay(50); //delay 50ms between each reading
+} [/expand]
