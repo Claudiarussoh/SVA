@@ -1,0 +1,267 @@
+import processing.serial.*;
+
+Serial myPort;
+
+float angle1, angle2, angle3;
+float speed1, speed2, speed3;
+float Z1 = 20;
+float Z2 = 70;
+float Z3 = 90;
+float X1 = 20;
+float X2 = 70;
+float X3 = 90;
+float C1 = 20;
+float C2 = 70;
+float C3 = 90;
+int orange;
+int yellow;
+int blue;
+int emotion = 0;
+int lastEmotion = 0;
+int n = 7;
+boolean first = true;
+import processing.sound.*;
+SinOsc sine;
+Env env;
+float attackTime = 0.3;
+float sustainTime = 0.4;
+float sustainLevel = 0.05;
+float releaseTime = 0.4;
+
+void setup() {
+
+//size(1500, 800);
+fullScreen(P2D);
+pixelDensity(2);
+angle1 = 0;
+angle2 = 0;
+angle3 = 0;
+speed1 = 0.01;
+speed2 = 0.01;
+speed3 = 0.01;
+background(0);
+//frameRate(30);
+
+//printArray(Serial.list());
+myPort = new Serial(this, Serial.list()[3], 9600);
+myPort.bufferUntil(‘\n’);
+
+// Create the sine oscillator.
+sine = new SinOsc(this);
+env = new Env(this);
+
+}
+void draw() {
+fill(0, 10);
+rect(0, 0, width, height);
+
+//fill(255);
+//textAlign(CENTER);
+//textSize(40);
+//text(“How’s everyone feeling so far…”, width/2, height/8);
+
+//fill(255);
+//textAlign(CENTER);
+//textSize(24);
+//stroke(0);
+//text(“Frustrated”, width/4, height/8*7);
+//text(“Sad”, width/2, height/8*7);
+//text(“Happy”, width/4*3, height/8*7);
+//textSize(48);
+//stroke(0);
+//text(orange, width/4, height/8*7+50);
+//text(yellow, width/2, height/8*7+50);
+//text(blue, width/4*3, height/8*7+50);
+
+pushMatrix();
+translate (width/4, height/2);
+rotate(angle1);
+
+//circle ORANGE
+for (int i=0; i<n; i++) {
+fill(255,140,0);
+pushMatrix();
+rotate(i*TWO_PI/n);
+translate(0, Z1);
+ellipse(0, 0, 10, 10);
+for (int j=0; j<n; j++) {
+fill(255,140,0);
+pushMatrix();
+rotate(j*TWO_PI/n);
+translate(0, Z2);
+ellipse(0, 0, 6, 6);
+for (int k=0; k<n; k++) {
+fill(255,140,0);
+pushMatrix();
+rotate(k*TWO_PI/n);
+translate(0, Z3);
+ellipse(0, 0, 5, 5);
+popMatrix();
+}
+popMatrix();
+}
+popMatrix();
+}
+popMatrix();
+
+pushMatrix();
+translate (width/2, height/2);
+rotate(angle2);
+
+//CIRCLE YELLOW
+for (int i=0; i<n; i++) {
+fill(255, 255, 0);
+pushMatrix();
+rotate(i*TWO_PI/n);
+translate(0, X1);
+ellipse(0, 0, 10, 10);
+for (int j=0; j<n; j++) {
+fill(255, 255, 0);
+pushMatrix();
+rotate(j*TWO_PI/n);
+translate(0, X2);
+ellipse(0, 0, 6, 6);
+for (int k=0; k<n; k++) {
+fill(255, 255, 0);
+pushMatrix();
+rotate(k*TWO_PI/n);
+translate(0, X3);
+ellipse(0, 0, 5, 5);
+popMatrix();
+}
+popMatrix();
+}
+popMatrix();
+}
+popMatrix();
+
+// circle BLUE;
+pushMatrix();
+translate (width/4*3, height/2);
+rotate(angle3);
+for (int i=0; i<n; i++) {
+fill(64,224,208);
+pushMatrix();
+rotate(i*TWO_PI/n);
+translate(0, C1);
+ellipse(0, 0, 10, 10);
+for (int j=0; j<n; j++) {
+fill(64,224,208);
+pushMatrix();
+rotate(j*TWO_PI/n);
+translate(0, C2);
+ellipse(0, 0, 6, 6);
+for (int k=0; k<n; k++) {
+fill(64,224,208);
+pushMatrix();
+rotate(k*TWO_PI/n);
+translate(0, C3);
+ellipse(0, 0, 5, 5);
+popMatrix();
+}
+popMatrix();
+}
+popMatrix();
+}
+popMatrix();
+
+angle1 = (angle1+speed1)%TWO_PI;
+angle2 = (angle2+speed2)%TWO_PI;
+angle3 = (angle3+speed3)%TWO_PI;
+checkEmotion();
+}
+
+void checkEmotion() {
+
+//if (keyPressed) {
+// if (key == ‘z’ || key == ‘Z’) {
+// Z1 += 10 ;
+// Z2 += 10;
+// Z3 += 10;
+// speed1 ++;
+// }
+//}
+
+if (emotion == 1 && emotion != lastEmotion) {
+//pushMatrix();
+//fill(255,140,0);
+//rect(0, 0, width, height);
+//popMatrix();
+Z1 += 10;
+Z2 += 10;
+Z3 += 10;
+speed1 ++;
+orange++;
+
+sine.freq(250);
+env.play(sine, attackTime, sustainTime, sustainLevel, releaseTime);
+}
+
+if (emotion == 2 && emotion != lastEmotion) {
+X1 += 10;
+X2 += 10;
+X3 += 10;
+speed2 ++;
+yellow++;
+
+sine.freq(800);
+env.play(sine, attackTime, sustainTime, sustainLevel, releaseTime);
+}
+
+if (emotion == 3 && emotion != lastEmotion) {
+C1 += 10;
+C2 += 10;
+C3 += 10;
+speed3 ++;
+blue ++;
+
+sine.freq(400);
+env.play(sine, attackTime, sustainTime, sustainLevel, releaseTime);
+}
+lastEmotion = emotion;
+
+noStroke();
+fill(0);
+rect(0,0, width, height/8);
+
+fill(255);
+textAlign(CENTER);
+textSize(24);
+text(“How everyone’s feeling so far…”, width/2, height/16+60);
+textSize(48);
+text(“The Feel Wheel”, width/2, height/16+20);
+
+fill(255,140,0, 150);
+rect(0, height/12*11, width/3, height/8);
+
+fill(255, 255, 0, 150);
+rect(width/3, height/12*11, width/3, height/8);
+
+fill(64,224,208, 150);
+rect(width/3*2, height/12*11, width/3, height/8);
+
+fill(0);
+textAlign(CENTER);
+textSize(18);
+noStroke();
+text(“Happy”, width/6, height/24*23);
+text(“Angry”, width/2, height/24*23);
+text(“Sad”, width/6*5, height/24*23);
+textSize(36);
+stroke(0);
+text(orange, width/6, height/24*23+38);
+text(yellow, width/2, height/24*23+38);
+text(blue, width/6*5, height/24*23+38);
+
+}
+
+void serialEvent(Serial myPort) {
+String inString = myPort.readStringUntil(‘\n’);
+if (inString != null) {
+// trim off any whitespace:
+inString = trim(inString);
+// convert to an int and map to the screen height:
+emotion = int(inString);
+println(emotion);
+}
+}
